@@ -1,28 +1,53 @@
-name: CI Workflow
+name: Cloud Build
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # Trigger on pushes to the main branch
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  push_to_gar:
+    name: Push Docker Image to Google Artifact Registry
     runs-on: ubuntu-latest
+
     steps:
       # Step 1: Checkout the code
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      
-      # Step 2: Set up Node.js environment
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Google Cloud SDK
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          node-version: '14'
+          credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
-        run: npm install
+      - name: Set up Docker with Google Artifact Registry
+        run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev
 
+      # Step 3: Build and Push Docker Image
+      - name: Build and Push Docker Image
+        env:
+          GAR_LOCATION: us-central1
+          GAR_REPO: unbound
+          IMAGE_NAME: unbound-image
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          # Build Docker image
+          docker build -t $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$GAR_REPO/$IMAGE_NAME:latest .
+          
+          # Push Docker image to Google Artifact Registry
+          docker push $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$GAR_REPO/$IMAGE_NAME:latest
+
+      # Step 4: Verify the pushed image (optional)
+      - name: Verify Docker Image
+        env:
+          GAR_LOCATION: us-central1
+          GAR_REPO: unbound
+          IMAGE_NAME: unbound-image
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          gcloud artifacts docker images list $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$GAR_REPO --format="table[box](name, version)"
