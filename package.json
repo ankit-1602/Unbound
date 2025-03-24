@@ -1,0 +1,32 @@
+{
+  "name": "unbound",
+  "version": "1.0.0",
+  "description": "Feature toggle App",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ankit-1602/Unbound.git"
+  },
+  "keywords": [
+    "Rest API",
+    "Unleash",
+    "Feature toggle",
+    "RBAC"
+  ],
+  "author": "Ankit Roy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ankit-1602/Unbound/issues"
+  },
+  "homepage": "https://github.com/ankit-1602/Unbound#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
