@@ -34,7 +34,7 @@ jobs:
           GAR_LOCATION: us-central1
           GAR_REPO: unbound
           IMAGE_NAME: unbound-image
-          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
         run: |
           # Build Docker image
           docker build -t $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$GAR_REPO/$IMAGE_NAME:latest .
@@ -48,6 +48,6 @@ jobs:
           GAR_LOCATION: us-central1
           GAR_REPO: unbound
           IMAGE_NAME: unbound-image
-          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
         run: |
           gcloud artifacts docker images list $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$GAR_REPO --format="table[box](name, version)"
