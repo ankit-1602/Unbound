@@ -51,7 +51,14 @@ jobs:
           PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
         run: |
           gcloud artifacts docker images list $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$GAR_REPO --format="table[box](name, version)"
-      - name: deploy to gke
+
+      # Step 5: Install gke-gcloud-auth-plugin
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+
+      # Step 6: Deploy to GKE
+      - name: Deploy to GKE
         env:
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT_ID }}
         run: |
