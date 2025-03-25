@@ -51,3 +51,10 @@ jobs:
           PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
         run: |
           gcloud artifacts docker images list $GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$GAR_REPO --format="table[box](name, version)"
+      - name: deploy to gke
+        env:
+          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT_ID }}
+        run: |
+          gcloud container clusters get-credentials autopilot-cluster-1 --region us-central1
+          sed -i "s/GOOGLE_PROJECT_ID/$GOOGLE_PROJECT/g" resources.yaml
+          kubectl apply -f resources.yaml
