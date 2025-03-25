@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: unbound-container
-        image: us-central1-docker.pkg.dev/GOOGLE_PROJECT_ID/unbound/unbound-image:latest
+        image: us-central1-docker.pkg.dev/shelfnote-np/unbound/unbound-image:latest
         ports:
         - containerPort: 3000 # Match the port exposed in the Dockerfile
         resources:
